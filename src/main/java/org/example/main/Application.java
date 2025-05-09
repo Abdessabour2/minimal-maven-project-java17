@@ -1,20 +1,32 @@
 package org.example.main;
 
-import java.io.IOException;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.Properties;
 
+@SpringBootApplication
+@RestController
 public class Application {
-    private static final System.Logger log = System.getLogger(Application.class.getName());
-    private static final Properties properties = loadProperties();
+
+    private final Properties properties = loadProperties();
+
     public static void main(String[] args) {
-        log.log(System.Logger.Level.INFO, String.format("version = %s", properties.getProperty("version", "-")));
+        SpringApplication.run(Application.class, args);
     }
 
-    private static Properties loadProperties() {
+    @GetMapping("/")
+    public String home() {
+        //String version = properties.getProperty("version", "-");
+        return String.format("Hello World");
+    }
+
+    private Properties loadProperties() {
         Properties props = new Properties();
         try {
             props.load(Application.class.getClassLoader().getResourceAsStream("app.properties"));
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
         return props;
